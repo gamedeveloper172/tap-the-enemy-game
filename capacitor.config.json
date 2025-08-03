@@ -1,0 +1,6 @@
+{
+  "appId": "com.maxapps.taptheenemy",
+  "appName": "Tap the Enemy",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
