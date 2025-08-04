@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Phaser 2D Game Without Music</title>
-<style>
-  body {
-    margin: 0;
-    background: linear-gradient(270deg, #0ff, #08f, #00f, #0ff);
-    background-size: 800% 800%;
-    animation: gradientBG 15s ease infinite;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    user-select: none;
-  }
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  #game {
-    border: 4px solid #0ff;
-    border-radius: 15px;
-    box-shadow: 0 0 20px #0ff;
-    width: 360px;
-    height: 640px;
-    background: #111;
-    overflow: hidden;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tap the Enemy</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(270deg, #0ff, #08f, #00f, #0ff);
+      background-size: 800% 800%;
+      animation: gradientBG 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      user-select: none;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #game {
+      border: 5px solid #0ff;
+      border-radius: 18px;
+      box-shadow: 0 0 25px #0ff;
+      width: 360px;
+      height: 640px;
+      background: #000;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
   <div id="game"></div>
@@ -39,7 +42,7 @@
   <script>
     let score = 0;
     let highScore = localStorage.getItem('highScore') || 0;
-    let scoreText, timerText, enemy, startText, gameOverText, startButton;
+    let scoreText, timerText, enemy, startText, gameOverText, startButton, tapSound;
     let timeLeft = 30;
     let timer;
     let gameStarted = false;
@@ -48,35 +51,43 @@
       type: Phaser.AUTO,
       width: 360,
       height: 640,
-      backgroundColor: '#111',
+      backgroundColor: '#000',
       parent: 'game',
-      scene: { preload, create, update }
+      scene: {
+        preload,
+        create,
+        update
+      }
     };
 
     const game = new Phaser.Game(config);
 
     function preload() {
-      this.load.image('enemy', '/Game/assets/enemy.png'); // Adjust path as needed
+      this.load.audio('tap', 'https://cdn.pixabay.com/audio/2022/03/15/audio_b7e2f4c1a8.mp3'); // free sound
     }
 
     function create() {
-      scoreText = this.add.text(10, 10, '', { fontSize: '24px', fill: '#0ff', fontFamily: 'Arial' });
-      timerText = this.add.text(240, 10, '', { fontSize: '24px', fill: '#0ff', fontFamily: 'Arial' });
+      tapSound = this.sound.add('tap');
 
-      enemy = this.add.image(180, 320, 'enemy')
-        .setScale(0.5)
-        .setAlpha(0)
-        .setInteractive({ useHandCursor: true });
+      scoreText = this.add.text(10, 10, '', {
+        fontSize: '22px', fill: '#0ff', fontFamily: 'monospace'
+      });
+
+      timerText = this.add.text(240, 10, '', {
+        fontSize: '22px', fill: '#0ff', fontFamily: 'monospace'
+      });
+
+      enemy = this.add.text(180, 320, '👾', {
+        fontSize: '64px',
+        fontStyle: 'bold'
+      }).setOrigin(0.5).setAlpha(0).setInteractive({ useHandCursor: true });
 
       enemy.on('pointerdown', () => {
         if (!gameStarted) return;
+        tapSound.play();
         score++;
         scoreText.setText(`Score: ${score}`);
-
-        if (score % 10 === 0) {
-          timeLeft += 5;
-        }
-
+        if (score % 10 === 0) timeLeft += 5;
         moveEnemy.call(this);
       });
 
@@ -89,23 +100,20 @@
         ease: 'Sine.easeInOut'
       });
 
-      startText = this.add.text(60, 250, 'Tap the Enemy!', {
-        fontSize: '36px',
+      startText = this.add.text(60, 240, 'Tap the Enemy!', {
+        fontSize: '32px',
         fill: '#0ff',
-        fontFamily: 'Arial',
-        fontStyle: 'bold',
         stroke: '#000',
         strokeThickness: 4,
+        fontFamily: 'monospace'
       });
 
-      startButton = this.add.text(120, 320, '▶️ Start Game', {
-        fontSize: '22px',
+      startButton = this.add.text(110, 320, '▶️ Start Game', {
+        fontSize: '20px',
         backgroundColor: '#0ff',
         color: '#000',
-        padding: { x: 12, y: 7 },
-        borderRadius: 12,
-        fontFamily: 'Arial',
-        fontWeight: 'bold',
+        padding: { x: 16, y: 10 },
+        fontFamily: 'monospace'
       }).setInteractive({ useHandCursor: true });
 
       startButton.on('pointerdown', () => startGame.call(this));
@@ -120,7 +128,7 @@
       startButton.setVisible(false);
       enemy.setAlpha(1);
       scoreText.setText('Score: 0');
-      timerText.setText('30s');
+      timerText.setText(`${timeLeft}s`);
       moveEnemy.call(this);
 
       timer = this.time.addEvent({
@@ -128,9 +136,7 @@
         callback: () => {
           timeLeft--;
           timerText.setText(`${timeLeft}s`);
-          if (timeLeft <= 0) {
-            endGame.call(this);
-          }
+          if (timeLeft <= 0) endGame.call(this);
         },
         loop: true,
       });
@@ -146,14 +152,13 @@
         localStorage.setItem('highScore', highScore);
       }
 
-      gameOverText = this.add.text(60, 300, `Game Over!\nScore: ${score}\nHigh Score: ${highScore}`, {
-        fontSize: '22px',
+      gameOverText = this.add.text(60, 280, `Game Over!\nScore: ${score}\nHigh Score: ${highScore}`, {
+        fontSize: '20px',
         fill: '#f00',
-        fontFamily: 'Arial',
-        fontWeight: 'bold',
         align: 'center',
         stroke: '#000',
         strokeThickness: 3,
+        fontFamily: 'monospace'
       });
 
       this.time.delayedCall(3000, () => {
@@ -165,8 +170,8 @@
     function update() {}
 
     function moveEnemy() {
-      const x = Phaser.Math.Between(50, 310);
-      const y = Phaser.Math.Between(100, 590);
+      const x = Phaser.Math.Between(40, 320);
+      const y = Phaser.Math.Between(100, 580);
       enemy.setPosition(x, y);
 
       enemy.setAlpha(0);
