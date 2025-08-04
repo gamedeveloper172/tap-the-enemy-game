@@ -1,6 +1,7 @@
 {
-  "appId": "com.maxapps.taptheenemy",
-  "appName": "Tap the Enemy",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "server": {
+    "url": "https://tap-the-enemy-game-gza6.vercel.app/game.html",
+    "cleartext": true
+  }
 }
