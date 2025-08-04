@@ -26,7 +26,7 @@
 
     #game {
       border: 5px solid #0ff;
-      border-radius: 18px;
+      border-radius: 20px;
       box-shadow: 0 0 25px #0ff;
       width: 360px;
       height: 640px;
@@ -63,7 +63,8 @@
     const game = new Phaser.Game(config);
 
     function preload() {
-      this.load.audio('tap', 'https://cdn.pixabay.com/audio/2022/03/15/audio_b7e2f4c1a8.mp3'); // free sound
+      // ✅ Use a reliable sound effect
+      this.load.audio('tap', 'https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
     }
 
     function create() {
@@ -135,15 +136,20 @@
         delay: 1000,
         callback: () => {
           timeLeft--;
-          timerText.setText(`${timeLeft}s`);
-          if (timeLeft <= 0) endGame.call(this);
+          if (timeLeft >= 0) {
+            timerText.setText(`${timeLeft}s`);
+          }
+
+          if (timeLeft <= 0) {
+            timer.remove(false);
+            endGame.call(this);
+          }
         },
         loop: true,
       });
     }
 
     function endGame() {
-      this.scene.pause();
       enemy.setAlpha(0);
       gameStarted = false;
 
@@ -163,7 +169,10 @@
 
       this.time.delayedCall(3000, () => {
         gameOverText.destroy();
-        this.scene.restart();
+        startText.setVisible(true);
+        startButton.setVisible(true);
+        scoreText.setText('');
+        timerText.setText('');
       });
     }
 
