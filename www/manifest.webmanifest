@@ -6,14 +6,14 @@
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#22c55e",
-  "icons": [
+ "icons": [
     {
-      "src": "/Game/assets/enemy.png",
+      "src": "/Game/assets/enemy-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/Game/assets/enemy.png",
+      "src": "/Game/assets/enemy-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
