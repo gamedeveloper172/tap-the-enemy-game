@@ -1,7 +1,6 @@
 {
-  "webDir": "www",
   "server": {
-    "url": "https://tap-the-enemy-game-gza6.vercel.app/game.html",
-    "cleartext": true
+    "url": "https://tap-the-enemy-game.vercel.app",
+    "cleartext": false
   }
 }
