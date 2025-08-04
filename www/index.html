@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <script>
-  // Redirect to the game page automatically
-  window.location.href = '/game'; // or '/game.html' if it's a file
-</script>
+    // Redirect to the game page automatically
+    window.location.href = '/game'; // or '/game.html'
+  </script>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -19,6 +19,7 @@
       background: #f2f4f7;
       color: #1e1e1e;
     }
+
     .app-container {
       max-width: 900px;
       margin: 30px auto;
@@ -30,6 +31,7 @@
 
     .header {
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 20px;
     }
@@ -39,6 +41,10 @@
       height: 100px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .app-info {
+      text-align: center;
     }
 
     .app-info h1 {
@@ -58,23 +64,49 @@
       margin-right: 10px;
     }
 
-    .install-btn, .play-btn {
-      margin-top: 12px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #0b9d58, #0aa14f);
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s;
-      display: inline-block;
-      margin-right: 12px;
+    .details {
+      margin-top: 8px;
     }
 
-    .install-btn:hover, .play-btn:hover {
-      background: linear-gradient(135deg, #0aa14f, #098d47);
+    .action-buttons {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #0aa14f, #0b9d58);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .btn:hover {
       transform: translateY(-2px);
+      background: linear-gradient(135deg, #098d47, #0aa14f);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn.download::before {
+      content: '📲';
+    }
+
+    .btn.play::before {
+      content: '🎮';
     }
 
     .availability {
@@ -85,15 +117,15 @@
 
     .screenshots {
       display: flex;
+      flex-direction: column;
       gap: 12px;
       margin: 24px 0;
-      justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
     .screenshots img {
-      width: 30%;
-      min-width: 100px;
+      width: 180px;
+      height: auto;
       border-radius: 12px;
       border: 1px solid #ddd;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -168,18 +200,18 @@
     }
 
     @media (max-width: 768px) {
-      .screenshots {
-        flex-direction: column;
-        align-items: center;
+      .app-icon {
+        width: 80px;
+        height: 80px;
+      }
+
+      .btn {
+        font-size: 15px;
+        padding: 10px 18px;
       }
 
       .screenshots img {
-        width: 80%;
-      }
-
-      .header {
-        flex-direction: column;
-        text-align: center;
+        width: 90%;
       }
     }
   </style>
@@ -198,15 +230,16 @@
           <span>Editor’s Choice</span>
         </div>
 
-        <!-- Install APK -->
-<a href="https://github.com/gamedeveloper172/tap-the-enemy-game/releases/download/v1.0.1/app-debug.apk" target="_blank" rel="noopener noreferrer">
-  📲 Download APK
-</a>
+        <div class="action-buttons">
+          <a href="https://github.com/gamedeveloper172/tap-the-enemy-game/releases/download/v1.0.1/app-debug.apk"
+             class="btn download" target="_blank" rel="noopener noreferrer">
+             Download APK
+          </a>
 
-
-        <!-- Play Online -->
-       <a href="/game" style="font-size: 24px; color: #0ff;">Play Game</a>
-
+          <a href="/game" class="btn play">
+             Play Game
+          </a>
+        </div>
 
         <p class="availability">This app is available for all of your devices</p>
       </div>
