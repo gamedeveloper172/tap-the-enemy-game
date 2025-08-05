@@ -5,6 +5,13 @@
     // Redirect to the game page automatically
     window.location.href = '/game'; // or '/game.html'
   </script> -->
+    <script>
+  // Only redirect if running inside Capacitor (the APK)
+  if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+    window.location.href = '/game.html';
+  }
+</script>
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
